@@ -144,7 +144,7 @@ namespace ImageClassifierTrainer
             Console.WriteLine("Saving model");
 
             Directory.CreateDirectory("Model");
-            mlContext.Model.Save(trainedModel, preProcessedImageDataView.Schema, "Model\\trainedModel.zip");
+            mlContext.Model.Save(trainedModel, preProcessedImageDataView.Schema, @"D:\Projects\ML_ImageClassifier\MeerkatModel\Model\trainedModel.zip");
 
             Console.WriteLine();
         }
