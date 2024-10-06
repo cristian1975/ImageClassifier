@@ -38,9 +38,15 @@ namespace MeerkatGUI
             foreach (var attribution in attributions)
             {
                 var parts = attribution.Split('\t');
-
-                _attributionLookup.Add(parts[0], (parts[1], parts[2]));
-            }
+                if (parts.Length > 1)
+                {
+                    _attributionLookup.Add(parts[0], (parts[1], parts[2]));
+                }
+                else
+                {
+                    _attributionLookup.Add("unknown photo", ("", ""));
+                }
+            } 
         }
 
         private void lstFiles_SelectedIndexChanged(object sender, EventArgs e)
@@ -53,12 +59,19 @@ namespace MeerkatGUI
 
             //Show image and attribution
             ImageWrapper selectedItem = (ImageWrapper)lstFiles.SelectedItem;
-            var attribution = _attributionLookup[selectedItem.FileName];
-
-            linkLabel.Text = $"Photo by {attribution.name} on Unsplash.com";
+            var attribution = (name:"",url:"");
+            _attributionLookup.TryGetValue(selectedItem.FileName,out attribution);
+            if (!string.IsNullOrEmpty(attribution.name))
+            {
+                linkLabel.Text = $"Photo by {attribution.name} on Unsplash.com";
+                linkLabel.Links.Add(9, attribution.name.Length, attribution.url);
+                linkLabel.Links.Add(linkLabel.Text.Length - 12, 12, "https://www.unsplash.com");
+            }
+            else 
+            {
+                linkLabel.Text = $"Photo taken by user";
+            }
             linkLabel.Links.Clear();
-            linkLabel.Links.Add(9, attribution.name.Length, attribution.url);
-            linkLabel.Links.Add(linkLabel.Text.Length - 12, 12, "https://www.unsplash.com");
 
             picDisplay.ImageLocation = selectedItem.Fullpath;
 
