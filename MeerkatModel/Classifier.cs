@@ -1,4 +1,5 @@
-﻿using Microsoft.ML;
+﻿using Google.Protobuf.WellKnownTypes;
+using Microsoft.ML;
 using System.IO;
 using System.Linq;
 
@@ -60,8 +61,8 @@ namespace MeerkatModel
 
             // Make the classification
             ModelOutput prediction = _predictionEngine.Predict(modelInput);
-
-            return prediction.PredictedLabel;
+           
+            return (prediction.Score[0] > 0.9 || prediction.Score[1] > 0.9) ? prediction.PredictedLabel :"Unknown";
         }
     }
 }
